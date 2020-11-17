@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ToggleGamemode.cs" />
     <Compile Include="GMM.cs" />
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Helper\Helper.cs" />

@@ -10,6 +10,6 @@ namespace SynapseGamemode
     {
         void Init();
         void Start();
-        void ForceStop();
+        void End();
     }
 }

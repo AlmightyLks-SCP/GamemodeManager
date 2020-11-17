@@ -22,18 +22,24 @@ namespace GamemodeManager
         [Config(section = "GamemodeManager")]
         public static PluginConfig Config;
 
-        private List<IGamemode> loadedGamemodes;
+        internal static GMM GamemodeManager { get; private set; }
+        internal List<(IGamemode Gamemode, Gamemode Info)> LoadedGamemodes { get; set; }
         private string gamemodeDirectory;
+
         public override void Load()
         {
             SynapseController.Server.Logger.Info($"<{Information.Name}> loading...");
+
+            GamemodeManager = this;
+
             if (Config.CustomGamemodePath == string.Empty)
                 gamemodeDirectory = Path.Combine(PluginDirectory, "Gamemodes");
             else
                 gamemodeDirectory = Config.CustomGamemodePath;
 
-            loadedGamemodes = new List<IGamemode>();
+            LoadedGamemodes = new List<(IGamemode Gamemode, Gamemode Info)>();
             LoadGamemodes();
+
             SynapseController.Server.Logger.Info($"<{Information.Name}> loaded!");
         }
         private void LoadGamemodes()
@@ -69,18 +75,29 @@ namespace GamemodeManager
                 }
             }
 
-            SynapseController.Server.Logger.Info("---------------------------");
-
-            foreach (var smth in dictionary)
+            foreach (var infoTypePair in dictionary)
             {
-                SynapseController.Server.Logger.Info($"Name: {smth.Key.Name}, Author: {smth.Key.Author},Name: {smth.Key.Version}, Name: {smth.Key.GitHubRepo}");
+                try
+                {
+                    SynapseController.Server.Logger.Info($"{infoTypePair.Key.Name} will now be activated!");
+
+                    IGamemode gamemode = (IGamemode)Activator.CreateInstance(infoTypePair.Value.Gamemode);
+
+                    LoadedGamemodes.Add((gamemode, infoTypePair.Key));
+                }
+                catch (Exception e)
+                {
+                    SynapseController.Server.Logger.Error($"Synapse-Controller: Activation of {infoTypePair.Value.Gamemode.Assembly.GetName().Name} failed!!\n{e}");
+                }
             }
 
-            foreach (var gamemode in loadedGamemodes)
+            SynapseController.Server.Logger.Info("---------------------------");
+
+            foreach (var gamemode in LoadedGamemodes)
             {
-                gamemode.Init();
-                gamemode.Start();
-                gamemode.ForceStop();
+                SynapseController.Server.Logger.Info(gamemode.Info.ToString());
+                gamemode.Gamemode.Init();
+                gamemode.Gamemode.Start();
             }
         }
     }
