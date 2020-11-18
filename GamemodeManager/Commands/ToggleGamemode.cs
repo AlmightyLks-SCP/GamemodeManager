@@ -1,9 +1,7 @@
 ﻿using Synapse.Command;
+using SynapseGamemode;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GamemodeManager.Commands
 {
@@ -22,42 +20,55 @@ namespace GamemodeManager.Commands
             var result = new CommandResult();
             var args = context.Arguments.ToArray();
 
-            if (args.Length < 3)
+            SynapseController.Server.Logger.Info(args.Length.ToString());
+            SynapseController.Server.Logger.Info(String.Join(" ", args));
+
+            if (args.Length < 2)
             {
                 result.State = CommandResultState.Error;
                 result.Message = "Invalid input.";
                 return result;
             }
+            
+            (IGamemode Gamemode, Gamemode Info) gamemode;
+
+            gamemode = GMM.GamemodeManager.LoadedGamemodes.FirstOrDefault((_) => _.Info.Name.ToLower() == args[1].ToLower());
+
+            if(gamemode == default((IGamemode Gamemode, Gamemode Info)))
+            {
+
+                result.State = CommandResultState.Error;
+                result.Message = $"{gamemode.Info.Name} - Gamemode not found";
+                return result;
+            }
 
             try
             {
-                if (args[1] == "start")
+                switch (args[0])
                 {
-                    var gamemode = GMM.GamemodeManager.LoadedGamemodes.FirstOrDefault((_) => _.Info.Name.ToLower() == args[2].ToLower());
-                    gamemode.Gamemode?.Start();
+                    case "start":
+                        gamemode.Gamemode.Start();
 
-                    result.State = CommandResultState.Ok;
-                    result.Message = $"{args[2]} started";
-                }
-                else if (args[1] == "end")
-                {
-                    var gamemode = GMM.GamemodeManager.LoadedGamemodes.FirstOrDefault((_) => _.Info.Name.ToLower() == args[2].ToLower());
-                    gamemode.Gamemode?.End();
+                        result.State = CommandResultState.Ok;
+                        result.Message = $"{gamemode.Info.Name} started";
+                        break;
+                    case "end":
+                        gamemode.Gamemode.End();
 
-                    result.State = CommandResultState.Ok;
-                    result.Message = $"{args[2]} ended";
-                }
-                else
-                {
-                    result.State = CommandResultState.Error;
-                    result.Message = "Invalid input.";
+                        result.State = CommandResultState.Ok;
+                        result.Message = $"{gamemode.Info.Name} ended";
+                        break;
+                    default:
+                        result.State = CommandResultState.Error;
+                        result.Message = "Invalid input.";
+                        break;
                 }
             }
             catch (Exception e)
             {
                 result.State = CommandResultState.Error;
-                result.Message = $"Error {args[1]}ing gamemode {args[2]}.";
-                SynapseController.Server.Logger.Info($"Error {args[1]}ing gamemode {args[2]}.");
+                result.Message = $"Error {args[0]}ing gamemode {args[1]}.";
+                SynapseController.Server.Logger.Info($"Error {args[0]}ing gamemode {args[1]}.");
                 SynapseController.Server.Logger.Info(e.StackTrace);
             }
 

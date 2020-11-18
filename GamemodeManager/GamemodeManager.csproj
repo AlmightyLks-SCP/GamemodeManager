@@ -82,9 +82,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SynapseGamemode\SynapseGamemode.csproj">
+    <ProjectReference Include="..\SynapseGamemode\Gamemode.csproj">
       <Project>{7f4ac963-288c-40e3-9788-b6a34962bb04}</Project>
-      <Name>SynapseGamemode</Name>
+      <Name>Gamemode</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BD039BC8-BB28-4CFD-82A7-866DA4BC0693}</ProjectGuid>
+    <ProjectGuid>{81DFB70D-0BB2-456C-ABB7-66CBE184B918}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestGamemode</RootNamespace>
-    <AssemblyName>TestGamemode</AssemblyName>
+    <RootNamespace>PeanutMode</RootNamespace>
+    <AssemblyName>PeanutMode</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -72,7 +72,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyCustomGamemode.cs" />
+    <Compile Include="PeanutMode.cs" />
+    <Compile Include="PluginHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

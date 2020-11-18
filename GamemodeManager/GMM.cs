@@ -64,8 +64,14 @@ namespace GamemodeManager
 
                     if (gamemodeInfo is null)
                     {
-                        SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode without Gamemode Attribute ... Default Values will be applied.");
-                        gamemodeInfo = new Gamemode();
+                        SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode without the Gamemode Attribute ... Gamemode not loaded.");
+                        continue;
+                    }
+
+                    if(gamemodeInfo == default(Gamemode))
+                    {
+                        SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode but does not have custom Gamemode Attribute ... Gamemode not loaded.");
+                        continue;
                     }
 
                     var allTypes = pluginAssembly.GetTypes().ToList();
@@ -97,7 +103,6 @@ namespace GamemodeManager
             {
                 SynapseController.Server.Logger.Info(gamemode.Info.ToString());
                 gamemode.Gamemode.Init();
-                gamemode.Gamemode.Start();
             }
         }
     }
