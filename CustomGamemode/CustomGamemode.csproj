@@ -7,8 +7,8 @@
     <ProjectGuid>{7F4AC963-288C-40E3-9788-B6A34962BB04}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SynapseGamemode</RootNamespace>
-    <AssemblyName>SynapseGamemode</AssemblyName>
+    <RootNamespace>CustomGamemode</RootNamespace>
+    <AssemblyName>CustomGamemode</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

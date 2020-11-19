@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SynapseGamemode
+namespace CustomGamemode
 {
     public class Gamemode : Attribute
     {

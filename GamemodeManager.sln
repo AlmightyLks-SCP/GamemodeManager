@@ -5,11 +5,7 @@ VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamemodeManager", "GamemodeManager\GamemodeManager.csproj", "{FB48A3D5-3C4C-4DE3-9DE2-CC3D654DA359}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gamemode", "SynapseGamemode\Gamemode.csproj", "{7F4AC963-288C-40E3-9788-B6A34962BB04}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGamemode", "TestGamemode\TestGamemode.csproj", "{BD039BC8-BB28-4CFD-82A7-866DA4BC0693}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeanutMode", "PeanutMode\PeanutMode.csproj", "{81DFB70D-0BB2-456C-ABB7-66CBE184B918}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomGamemode", "CustomGamemode\CustomGamemode.csproj", "{7F4AC963-288C-40E3-9788-B6A34962BB04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +21,6 @@ Global
 		{7F4AC963-288C-40E3-9788-B6A34962BB04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F4AC963-288C-40E3-9788-B6A34962BB04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F4AC963-288C-40E3-9788-B6A34962BB04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD039BC8-BB28-4CFD-82A7-866DA4BC0693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD039BC8-BB28-4CFD-82A7-866DA4BC0693}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD039BC8-BB28-4CFD-82A7-866DA4BC0693}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD039BC8-BB28-4CFD-82A7-866DA4BC0693}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81DFB70D-0BB2-456C-ABB7-66CBE184B918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81DFB70D-0BB2-456C-ABB7-66CBE184B918}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81DFB70D-0BB2-456C-ABB7-66CBE184B918}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81DFB70D-0BB2-456C-ABB7-66CBE184B918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

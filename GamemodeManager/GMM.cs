@@ -1,16 +1,17 @@
 ﻿using Synapse.Api.Plugin;
-using SynapseGamemode;
+using CustomGamemode;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace GamemodeManager
 {
     [PluginInformation(
         Author = "AlmightyLks",
-        Description = "A gamemode manager",
+        Description = "A gamemode manager for custom gamemodes",
         Name = "GamemodeManager",
         SynapseMajor = 2,
         SynapseMinor = 0,
@@ -24,12 +25,18 @@ namespace GamemodeManager
 
         internal static GMM GamemodeManager { get; private set; }
         internal List<(IGamemode Gamemode, Gamemode Info)> LoadedGamemodes { get; set; }
+        internal List<string> NextRoundGamemodes { get; set; }
         private string gamemodeDirectory;
 
         public override void Load()
         {
+            var watch = new Stopwatch();
+            watch.Start();
+
             SynapseController.Server.Logger.Info($"<{Information.Name}> loading...");
 
+            LoadedGamemodes = new List<(IGamemode Gamemode, Gamemode Info)>();
+            NextRoundGamemodes= new List<string>();
             GamemodeManager = this;
 
             if (Config.CustomGamemodePath == string.Empty)
@@ -37,12 +44,31 @@ namespace GamemodeManager
             else
                 gamemodeDirectory = Config.CustomGamemodePath;
 
-            LoadedGamemodes = new List<(IGamemode Gamemode, Gamemode Info)>();
             LoadGamemodes();
 
-            SynapseController.Server.Logger.Info($"<{Information.Name}> loaded!");
+            watch.Stop();
+
+            SynapseController.Server.Logger.Info($"<{Information.Name}> loaded {LoadedGamemodes.Count} Gamemodes within {watch.Elapsed.TotalMilliseconds} ms!");
+
+            Synapse.Api.Events.EventHandler.Get.Round.RoundStartEvent += Round_RoundStartEvent;
+        
         }
-        private void LoadGamemodes()
+
+        private void Round_RoundStartEvent()
+        {
+            foreach (var modeName in NextRoundGamemodes)
+            {
+                var gamemode = GMM.GamemodeManager.LoadedGamemodes.FirstOrDefault((_) => _.Info.Name.ToLower() == modeName.ToLower());
+
+                if (gamemode == default((IGamemode Gamemode, Gamemode Info)))
+                    continue;
+
+                gamemode.Gamemode.Start();
+            }
+        }
+
+        //[Credits] Inspired by Synapse.
+        public void LoadGamemodes()
         {
             if (!Directory.Exists(gamemodeDirectory))
                 Directory.CreateDirectory(gamemodeDirectory);
@@ -53,31 +79,38 @@ namespace GamemodeManager
 
             foreach (var pluginPath in pluginPaths)
             {
-                var pluginAssembly = Assembly.Load(File.ReadAllBytes(pluginPath));
-
-                foreach (var type in pluginAssembly.GetTypes())
+                try
                 {
-                    if (!typeof(IGamemode).IsAssignableFrom(type))
-                        continue;
+                    var pluginAssembly = Assembly.Load(File.ReadAllBytes(pluginPath));
 
-                    var gamemodeInfo = type.GetCustomAttribute<Gamemode>();
-
-                    if (gamemodeInfo is null)
+                    foreach (var type in pluginAssembly.GetTypes())
                     {
-                        SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode without the Gamemode Attribute ... Gamemode not loaded.");
-                        continue;
-                    }
+                        if (!typeof(IGamemode).IsAssignableFrom(type))
+                            continue;
 
-                    if(gamemodeInfo == default(Gamemode))
-                    {
-                        SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode but does not have custom Gamemode Attribute ... Gamemode not loaded.");
-                        continue;
-                    }
+                        var gamemodeInfo = type.GetCustomAttribute<Gamemode>();
 
-                    var allTypes = pluginAssembly.GetTypes().ToList();
-                    allTypes.Remove(type);
-                    dictionary.Add(gamemodeInfo, (type, allTypes));
-                    break;
+                        if (gamemodeInfo is null)
+                        {
+                            SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode without the Gamemode Attribute ... Gamemode not loaded.");
+                            continue;
+                        }
+
+                        if (gamemodeInfo == default(Gamemode))
+                        {
+                            SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode but does not have custom Gamemode Attribute ... Gamemode not loaded.");
+                            continue;
+                        }
+
+                        var allTypes = pluginAssembly.GetTypes().ToList();
+                        allTypes.Remove(type);
+                        dictionary.Add(gamemodeInfo, (type, allTypes));
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    SynapseController.Server.Logger.Info($"{Path.GetFileName(pluginPath)} failed to load.\n{e.StackTrace}");
                 }
             }
 
@@ -93,17 +126,12 @@ namespace GamemodeManager
                 }
                 catch (Exception e)
                 {
-                    SynapseController.Server.Logger.Error($"Synapse-Controller: Activation of {infoTypePair.Value.Gamemode.Assembly.GetName().Name} failed!!\n{e}");
+                    SynapseController.Server.Logger.Error($"Instantiating of {infoTypePair.Value.Gamemode.Assembly.GetName().Name} failed!\n{e}");
                 }
             }
 
-            SynapseController.Server.Logger.Info("---------------------------");
-
             foreach (var gamemode in LoadedGamemodes)
-            {
                 SynapseController.Server.Logger.Info(gamemode.Info.ToString());
-                gamemode.Gamemode.Init();
-            }
         }
     }
 }

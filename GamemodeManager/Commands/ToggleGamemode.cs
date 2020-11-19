@@ -1,6 +1,7 @@
-﻿using Synapse.Command;
-using SynapseGamemode;
+﻿using CustomGamemode;
+using Synapse.Command;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace GamemodeManager.Commands
@@ -11,34 +12,20 @@ namespace GamemodeManager.Commands
         Description = "Toggle gamemodes",
         Permission = "GamemodeManager.Manage",
         Platforms = new Platform[] { Platform.RemoteAdmin },
-        Usage = "\"gmm start [GamemodeName]\" or \"gmm end [GamemodeName]\""
+        Usage = "\"gmm reload\" / \"gmm list\" / \"gmm start [GamemodeName]\" / \"gmm end [GamemodeName]\" / "
         )]
     public class ToggleGamemode : ISynapseCommand
     {
         public CommandResult Execute(CommandContext context)
         {
+            (IGamemode Gamemode, Gamemode Info) gamemode;
             var result = new CommandResult();
             var args = context.Arguments.ToArray();
 
-            SynapseController.Server.Logger.Info(args.Length.ToString());
-            SynapseController.Server.Logger.Info(String.Join(" ", args));
-
-            if (args.Length < 2)
+            if (args.Length < 1)
             {
                 result.State = CommandResultState.Error;
                 result.Message = "Invalid input.";
-                return result;
-            }
-            
-            (IGamemode Gamemode, Gamemode Info) gamemode;
-
-            gamemode = GMM.GamemodeManager.LoadedGamemodes.FirstOrDefault((_) => _.Info.Name.ToLower() == args[1].ToLower());
-
-            if(gamemode == default((IGamemode Gamemode, Gamemode Info)))
-            {
-
-                result.State = CommandResultState.Error;
-                result.Message = $"{gamemode.Info.Name} - Gamemode not found";
                 return result;
             }
 
@@ -46,18 +33,88 @@ namespace GamemodeManager.Commands
             {
                 switch (args[0])
                 {
-                    case "start":
-                        gamemode.Gamemode.Start();
+                    case "list":
+                        {
+                            if (GMM.GamemodeManager.LoadedGamemodes.Count != 0)
+                            {
+                                result.State = CommandResultState.Ok;
+                                result.Message = String.Join(", ", GMM.GamemodeManager.LoadedGamemodes.Select((_) => _.Info.Name));
+                            }
+                            else
+                            {
+                                result.State = CommandResultState.Ok;
+                                result.Message = "No gamemodes loaded.";
+                            }
+                            break;
+                        }
+                    case "reload":
+                        {
+                            Stopwatch watch = new Stopwatch();
 
-                        result.State = CommandResultState.Ok;
-                        result.Message = $"{gamemode.Info.Name} started";
-                        break;
-                    case "end":
-                        gamemode.Gamemode.End();
+                            GMM.GamemodeManager.LoadedGamemodes.Clear();
 
-                        result.State = CommandResultState.Ok;
-                        result.Message = $"{gamemode.Info.Name} ended";
-                        break;
+                            watch.Start();
+                            GMM.GamemodeManager.LoadGamemodes();
+                            watch.Stop();
+
+                            result.State = CommandResultState.Ok;
+                            result.Message = $"<{GMM.GamemodeManager.Information.Name}> loaded {GMM.GamemodeManager.LoadedGamemodes.Count} Gamemodes within {watch.Elapsed.TotalMilliseconds} ms!";
+
+                            break;
+                        }
+                    case "start" when args.Length == 2:
+                        {
+                            gamemode = GMM.GamemodeManager.LoadedGamemodes.FirstOrDefault((_) => _.Info.Name.ToLower() == args[1].ToLower());
+
+                            if (gamemode == default((IGamemode Gamemode, Gamemode Info)))
+                            {
+                                result.State = CommandResultState.Error;
+                                result.Message = $"{args[1]} - Gamemode not found";
+                                return result;
+                            }
+
+                            gamemode.Gamemode.Start();
+
+                            result.State = CommandResultState.Ok;
+                            result.Message = $"{gamemode.Info.Name} started";
+
+                            break;
+                        }
+                    case "nextround" when args.Length == 2:
+                        {
+                            var gamemodeExists = GMM.GamemodeManager.LoadedGamemodes.Any((_) => _.Info.Name.ToLower() == args[1].ToLower());
+
+                            if (!gamemodeExists)
+                            {
+                                result.State = CommandResultState.Error;
+                                result.Message = $"{args[1]} - Gamemode not found";
+                            }
+                            else
+                            {
+                                GMM.GamemodeManager.NextRoundGamemodes.Add(args[1]);
+                                result.State = CommandResultState.Ok;
+                                result.Message = $"{args[1]} queued for next round";
+                            }
+
+                            break;
+                        }
+                    case "end" when args.Length == 2:
+                        {
+                            gamemode = GMM.GamemodeManager.LoadedGamemodes.FirstOrDefault((_) => _.Info.Name.ToLower() == args[1].ToLower());
+
+                            if (gamemode == default((IGamemode Gamemode, Gamemode Info)))
+                            {
+                                result.State = CommandResultState.Error;
+                                result.Message = $"{args[1]} - Gamemode not found";
+                                return result;
+                            }
+
+                            gamemode.Gamemode.End();
+
+                            result.State = CommandResultState.Ok;
+                            result.Message = $"{gamemode.Info.Name} ended";
+                            break;
+                        }
                     default:
                         result.State = CommandResultState.Error;
                         result.Message = "Invalid input.";
@@ -67,9 +124,18 @@ namespace GamemodeManager.Commands
             catch (Exception e)
             {
                 result.State = CommandResultState.Error;
-                result.Message = $"Error {args[0]}ing gamemode {args[1]}.";
-                SynapseController.Server.Logger.Info($"Error {args[0]}ing gamemode {args[1]}.");
-                SynapseController.Server.Logger.Info(e.StackTrace);
+                if (args.Length < 2)
+                {
+                    result.Message = $"Error {args[0]}ing gamemode {args[1]}.";
+                    SynapseController.Server.Logger.Info($"Error {args[0]}ing gamemode {args[1]}.");
+                    SynapseController.Server.Logger.Info(e.StackTrace);
+                }
+                else
+                {
+                    result.Message = $"Error {args[0]}ing.";
+                    SynapseController.Server.Logger.Info($"Error {args[0]}ing.");
+                    SynapseController.Server.Logger.Info(e.StackTrace);
+                }
             }
 
             return result;

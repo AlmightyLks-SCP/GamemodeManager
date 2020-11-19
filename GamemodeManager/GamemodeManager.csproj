@@ -75,16 +75,15 @@
     <Compile Include="Commands\ToggleGamemode.cs" />
     <Compile Include="GMM.cs" />
     <Compile Include="Config\PluginConfig.cs" />
-    <Compile Include="Helper\Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SynapseGamemode\Gamemode.csproj">
+    <ProjectReference Include="..\CustomGamemode\CustomGamemode.csproj">
       <Project>{7f4ac963-288c-40e3-9788-b6a34962bb04}</Project>
-      <Name>Gamemode</Name>
+      <Name>CustomGamemode</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
