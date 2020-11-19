@@ -11,7 +11,7 @@ namespace GamemodeManager
 {
     [PluginInformation(
         Author = "AlmightyLks",
-        Description = "A gamemode manager for custom gamemodes",
+        Description = "A Gamemode Manager for Synapse",
         Name = "GamemodeManager",
         SynapseMajor = 2,
         SynapseMinor = 0,

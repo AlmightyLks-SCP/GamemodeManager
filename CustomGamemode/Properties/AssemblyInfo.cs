@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SynapseGamemode")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("CustomGamemode")]
+[assembly: AssemblyDescription("Necessary assembly for Synapse GMM-Gamemodes")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SynapseGamemode")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCompany("AlmightyLks")]
+[assembly: AssemblyProduct("CustomGamemode")]
+[assembly: AssemblyCopyright("Copyright © AlmightyLks 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
