@@ -68,22 +68,22 @@ namespace GamemodeManager
         }
 
         //[Credits] Inspired by Synapse.
-        public void LoadGamemodes()
+        internal void LoadGamemodes()
         {
             if (!Directory.Exists(gamemodeDirectory))
                 Directory.CreateDirectory(gamemodeDirectory);
 
-            var pluginPaths = Directory.GetFiles(gamemodeDirectory, "*.dll").ToList();
+            var gamemodePaths = Directory.GetFiles(gamemodeDirectory, "*.dll").ToList();
 
             var dictionary = new Dictionary<Gamemode, (Type Gamemode, List<Type> Types)>();
 
-            foreach (var pluginPath in pluginPaths)
+            foreach (var gamemodePath in gamemodePaths)
             {
                 try
                 {
-                    var pluginAssembly = Assembly.Load(File.ReadAllBytes(pluginPath));
+                    var gamemodeAssembly = Assembly.Load(File.ReadAllBytes(gamemodePath));
 
-                    foreach (var type in pluginAssembly.GetTypes())
+                    foreach (var type in gamemodeAssembly.GetTypes())
                     {
                         if (!typeof(IGamemode).IsAssignableFrom(type))
                             continue;
@@ -92,17 +92,17 @@ namespace GamemodeManager
 
                         if (gamemodeInfo is null)
                         {
-                            SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode without the Gamemode Attribute ... Gamemode not loaded.");
+                            SynapseController.Server.Logger.Info($"The File {gamemodeAssembly.GetName().Name} has a class which implements IGamemode without the Gamemode Attribute ... Gamemode not loaded.");
                             continue;
                         }
 
                         if (gamemodeInfo == default(Gamemode))
                         {
-                            SynapseController.Server.Logger.Info($"The File {pluginAssembly.GetName().Name} has a class which implements IGamemode but does not have custom Gamemode Attribute ... Gamemode not loaded.");
+                            SynapseController.Server.Logger.Info($"The File {gamemodeAssembly.GetName().Name} has a class which implements IGamemode but does not have custom Gamemode Attribute ... Gamemode not loaded.");
                             continue;
                         }
 
-                        var allTypes = pluginAssembly.GetTypes().ToList();
+                        var allTypes = gamemodeAssembly.GetTypes().ToList();
                         allTypes.Remove(type);
                         dictionary.Add(gamemodeInfo, (type, allTypes));
                         break;
@@ -110,7 +110,7 @@ namespace GamemodeManager
                 }
                 catch (Exception e)
                 {
-                    SynapseController.Server.Logger.Info($"{Path.GetFileName(pluginPath)} failed to load.\n{e.StackTrace}");
+                    SynapseController.Server.Logger.Info($"{Path.GetFileName(gamemodePath)} failed to load.\n{e.StackTrace}");
                 }
             }
 
