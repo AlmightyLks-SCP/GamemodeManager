@@ -12,7 +12,7 @@ namespace GamemodeManager.Commands
         Description = "Toggle gamemodes",
         Permission = "GamemodeManager.Manage",
         Platforms = new Platform[] { Platform.RemoteAdmin },
-        Usage = "\"gmm reload\" / \"gmm list\" / \"gmm start [GamemodeName]\" / \"gmm end [GamemodeName]\" / "
+        Usage = "\"gmm reload\" / \"gmm list\" / \"gmm start [GamemodeName]\" / \"gmm end [GamemodeName]\" / \"gmm nextround [GamemodeName]\""
         )]
     public class ToggleGamemode : ISynapseCommand
     {
