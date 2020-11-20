@@ -24,7 +24,7 @@ namespace GamemodeManager
         public static PluginConfig Config;
 
         internal static GMM GamemodeManager { get; private set; }
-        internal List<(IGamemode Gamemode, Gamemode Info)> LoadedGamemodes { get; set; }
+        internal List<(IGamemode Gamemode, Gamemode Info)> LoadedGamemodes { get; private set; }
         internal List<string> NextRoundGamemodes { get; set; }
         private string gamemodeDirectory;
 
@@ -126,7 +126,7 @@ namespace GamemodeManager
                 }
                 catch (Exception e)
                 {
-                    SynapseController.Server.Logger.Error($"Instantiating of {infoTypePair.Value.Gamemode.Assembly.GetName().Name} failed!\n{e}");
+                    SynapseController.Server.Logger.Error($"Instantiating {infoTypePair.Value.Gamemode.Assembly.GetName().Name} failed!\n{e}");
                 }
             }
 
