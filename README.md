@@ -5,7 +5,7 @@
 ## Installation:
 Download the `CustomGamemode.dll` and place it within your `Synapse\dependencies` folder.  
 Place the `GamemodeManager.dll` in your usual plugins folder.  
-Either your configured path or the default Gamemode folder will provide a place for your plugins to be stored and loaded.  
+Either your configured path or the default Gamemode folder will provide a place for your Gamemodes to be stored and loaded.  
 Done!
 
 ---
