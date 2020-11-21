@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gamemode.cs" />
+    <Compile Include="GamemodeConfig.cs" />
     <Compile Include="IGamemode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
