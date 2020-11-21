@@ -10,16 +10,19 @@ namespace GamemodeManager
 {
     internal class GamemodeLoader
     {
-        internal List<IGamemode> LoadedGamemodes { get; set; }
+        internal List<object> LoadedGamemodes { get; set; }
         internal List<string> NextRoundGamemodes { get; set; }
+
         private string _gamemodeDirectory;
 
         public GamemodeLoader(string gamemodeDirectory)
         {
             _gamemodeDirectory = gamemodeDirectory;
+            LoadedGamemodes = new List<object>();
+            NextRoundGamemodes = new List<string>();
         }
 
-        //[Credits] Inspired by Synapse.
+        //[Credits] Assembly-Loading inspired by Synapse.
         public void LoadGamemodes()
         {
             if (!Directory.Exists(_gamemodeDirectory))
@@ -58,7 +61,7 @@ namespace GamemodeManager
                 {
                     SynapseController.Server.Logger.Info($"{infoTypePair.Key.Name} will now be activated!");
 
-                    IGamemode gamemode = (IGamemode)Activator.CreateInstance(infoTypePair.Key);
+                    object gamemode = Activator.CreateInstance(infoTypePair.Key);
 
                     LoadedGamemodes.Add(gamemode);
                 }
@@ -69,7 +72,7 @@ namespace GamemodeManager
             }
 
             foreach (var gamemode in LoadedGamemodes)
-                SynapseController.Server.Logger.Info(gamemode.ToInfoString());
+                SynapseController.Server.Logger.Info(((IGamemode)gamemode).ToInfoString());
         }
     }
 }

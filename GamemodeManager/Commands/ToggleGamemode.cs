@@ -18,7 +18,7 @@ namespace GamemodeManager.Commands
     {
         public CommandResult Execute(CommandContext context)
         {
-            IGamemode gamemode;
+            object gamemode;
             var result = new CommandResult();
             var args = context.Arguments.ToArray();
 
@@ -38,7 +38,7 @@ namespace GamemodeManager.Commands
                             if (GMM.GamemodeLoader.LoadedGamemodes.Count != 0)
                             {
                                 result.State = CommandResultState.Ok;
-                                result.Message = String.Join(", ", GMM.GamemodeLoader.LoadedGamemodes.Select((_) => _.Name));
+                                result.Message = String.Join(", ", GMM.GamemodeLoader.LoadedGamemodes.Select((_) => ((IGamemode)_).Name));
                             }
                             else
                             {
@@ -64,7 +64,7 @@ namespace GamemodeManager.Commands
                         }
                     case "start" when args.Length == 2:
                         {
-                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => _.Name.ToLower() == args[1].ToLower());
+                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => ((IGamemode)_).Name.ToLower() == args[1].ToLower());
 
                             if (gamemode == default(IGamemode))
                             {
@@ -73,16 +73,16 @@ namespace GamemodeManager.Commands
                                 return result;
                             }
 
-                            gamemode.Start();
+                            ((IGamemode)gamemode).Start();
 
                             result.State = CommandResultState.Ok;
-                            result.Message = $"{gamemode.Name} started";
+                            result.Message = $"{((IGamemode)gamemode).Name} started";
 
                             break;
                         }
                     case "nextround" when args.Length == 2:
                         {
-                            var gamemodeExists = GMM.GamemodeLoader.LoadedGamemodes.Any((_) => _.Name.ToLower() == args[1].ToLower());
+                            var gamemodeExists = GMM.GamemodeLoader.LoadedGamemodes.Any((_) => ((IGamemode)_).Name.ToLower() == args[1].ToLower());
 
                             if (!gamemodeExists)
                             {
@@ -100,7 +100,7 @@ namespace GamemodeManager.Commands
                         }
                     case "end" when args.Length == 2:
                         {
-                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => _.Name.ToLower() == args[1].ToLower());
+                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => ((IGamemode)_).Name.ToLower() == args[1].ToLower());
 
                             if (gamemode == default(IGamemode))
                             {
@@ -109,10 +109,10 @@ namespace GamemodeManager.Commands
                                 return result;
                             }
 
-                            gamemode.End();
+                            ((IGamemode)gamemode).End();
 
                             result.State = CommandResultState.Ok;
-                            result.Message = $"{gamemode.Name} ended";
+                            result.Message = $"{((IGamemode)gamemode).Name} ended";
                             break;
                         }
                     default:

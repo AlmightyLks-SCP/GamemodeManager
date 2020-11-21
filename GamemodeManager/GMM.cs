@@ -32,14 +32,16 @@ namespace GamemodeManager
             var watch = new Stopwatch();
 
             SynapseController.Server.Logger.Info($"<{Information.Name}> loading...");
-
-            GamemodeLoader.LoadedGamemodes = new List<IGamemode>();
-            GamemodeLoader.NextRoundGamemodes = new List<string>();
+            string gamemodePath = string.Empty;
+            string gamemodeConfigPath = string.Empty;
 
             if (Config.CustomGamemodePath == string.Empty)
-                GamemodeLoader = new GamemodeLoader(Path.Combine(PluginDirectory, "Gamemodes"));
+                gamemodePath = Path.Combine(PluginDirectory, "Gamemodes");
             else
-                GamemodeLoader = new GamemodeLoader(Config.CustomGamemodePath);
+                gamemodePath = Config.CustomGamemodePath;
+
+
+            GamemodeLoader = new GamemodeLoader(gamemodePath);
 
             _gmmEventHandler = new GMMEventHandler(GamemodeLoader);
 

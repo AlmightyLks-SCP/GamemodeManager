@@ -20,24 +20,24 @@ namespace GamemodeManager.EventHandler
         {
             if (GMM.Config.AutoGamemodeEnd)
                 foreach (var gamemode in gamemodeLoader.LoadedGamemodes)
-                    gamemode.End();
+                    ((IGamemode)gamemode).End();
         }
         public void Round_RoundEndEvent()
         {
             if (GMM.Config.AutoGamemodeEnd)
                 foreach (var gamemode in gamemodeLoader.LoadedGamemodes)
-                    gamemode.End();
+                    ((IGamemode)gamemode).End();
         }
         public void Round_RoundStartEvent()
         {
             foreach (var modeName in gamemodeLoader.NextRoundGamemodes)
             {
-                var gamemode = gamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => _.Name.ToLower() == modeName.ToLower());
+                var gamemode = gamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => ((IGamemode)_).Name.ToLower() == modeName.ToLower());
 
                 if (gamemode == default(IGamemode))
                     continue;
 
-                gamemode.Start();
+                ((IGamemode)gamemode).Start();
             }
         }
     }
