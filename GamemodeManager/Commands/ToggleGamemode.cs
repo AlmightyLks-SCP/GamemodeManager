@@ -12,7 +12,7 @@ namespace GamemodeManager.Commands
         Description = "Toggle gamemodes",
         Permission = "GamemodeManager.Manage",
         Platforms = new Platform[] { Platform.RemoteAdmin },
-        Usage = "\"gmm reload\" / \"gmm list\" / \"gmm start [GamemodeName]\" / \"gmm end [GamemodeName]\" / \"gmm nextround [GamemodeName]\""
+        Usage = "\"gmm reload\" / \"gmm list\" / \"gmm start [GamemodeName]\" / \"gmm end [GamemodeName]\" / \"gmm nextround [GamemodeName]\" / \"gmm clear\""
         )]
     public class ToggleGamemode : ISynapseCommand
     {
@@ -45,6 +45,7 @@ namespace GamemodeManager.Commands
                                 result.State = CommandResultState.Ok;
                                 result.Message = "No gamemodes loaded.";
                             }
+                            
                             break;
                         }
                     case "reload":
@@ -59,6 +60,15 @@ namespace GamemodeManager.Commands
 
                             result.State = CommandResultState.Ok;
                             result.Message = $"<GamemodeManager> loaded {GMM.GamemodeLoader.LoadedGamemodes.Count} Gamemodes within {watch.Elapsed.TotalMilliseconds} ms!";
+
+                            break;
+                        }
+                    case "clear":
+                        {
+                            GMM.GamemodeLoader.NextRoundGamemodes.Clear();
+
+                            result.State = CommandResultState.Ok;
+                            result.Message = $"Queue cleared.";
 
                             break;
                         }
