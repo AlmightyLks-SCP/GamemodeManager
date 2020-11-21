@@ -17,6 +17,8 @@ Done!
 {
 # Custom Gamemode Path, leave empty for default
 customGamemodePath: ''
+# End all Gamemodes on round end
+autoGamemodeEnd: true
 }
 ```
 
@@ -25,64 +27,15 @@ customGamemodePath: ''
 ## For Developers:
 In order to create gamemodes, please download and reference the `CustomGamemode.dll` within your gamemode's project.  
 Do not refer to Synapse's way of plugin-creation, because GamemodeManager has its own way of determining and loading a gamemode.  
-However, you may refer to Synapse's other functionalities. This includes subscribing events, working with Synapse-Types, etc...  
+However, you may refer to Synapse's other functionalities. This includes subscribing events, working with Synapse's types, etc...  
 <br><br>
-Your Gamemode's class needs to have a `Gamemode` Attribute, with values other than the default values,  
-and has to implement the `IGamemode` interface,  both from the referenced `CustomGamemode.dll`.  
+Your Gamemode's class needs to implement the `IGamemode` interface, from the referenced `CustomGamemode.dll`.  
+That's it.  
 
-Quick example with the well-known Peanut Infection:
-```cs
-using CustomGamemode;
-using Synapse.Api.Events.SynapseEventArguments;
-
-namespace PeanutInfection
-{
-    [Gamemode(Name = "PeanutInfection", Author = "AlmightyLks", GitHubRepo = "https://github.com/AlmightyLks/SomeRepo",  Version = "1.0.0.0")]
-    public class PeanutInfection : IGamemode
-    {
-        public void Start()
-        {
-            Synapse.Api.Events.EventHandler.Get.Round.RoundStartEvent += Round_RoundStartEvent;
-            Synapse.Api.Events.EventHandler.Get.Player.PlayerDeathEvent += Player_PlayerDeathEvent;
-
-            SynapseController.Server.Logger.Info("PeanutInfection Started");
-        }
-        public void End()
-        {
-            Synapse.Api.Events.EventHandler.Get.Round.RoundStartEvent -= Round_RoundStartEvent;
-            Synapse.Api.Events.EventHandler.Get.Player.PlayerDeathEvent -= Player_PlayerDeathEvent;
-
-            SynapseController.Server.Logger.Info("PeanutInfection Ended");
-        }
-        private void Round_RoundStartEvent()
-        {
-            SynapseController.Server.Map.Round.RoundLock = true;
-
-            Timing.CallDelayed(0.1f, () =>
-            {
-                foreach (var player in SynapseController.Server.Players)
-                {
-                    player.ChangeRoleAtPosition(RoleType.ClassD);
-                }
-                SynapseController.Server.Players[UnityEngine.Random.Range(0, (SynapseController.Server.Players.Count - 1))].ChangeRoleAtPosition(RoleType.Scp173);
-                SynapseController.Server.Players[UnityEngine.Random.Range(0, (SynapseController.Server.Players.Count - 1))].ChangeRoleAtPosition(RoleType.Scp173);
-                SynapseController.Server.Players[UnityEngine.Random.Range(0, (SynapseController.Server.Players.Count - 1))].ChangeRoleAtPosition(RoleType.Scp173);
-
-                SynapseController.Server.Map.Round.RoundLock = false;
-            });
-        }
-        private void Player_PlayerDeathEvent(PlayerDeathEventArgs ev)
-        {
-            if (ev.Victim.RoleID != 0)
-                ev.Victim.ChangeRoleAtPosition(RoleType.Scp173);
-        }
-    }
-}
-
-```
+Quick example with the well-known Gamemode [Peanut Infection](https://github.com/AlmightyLks/PeanutInfection).
 
 **Important Note:**  
-First off: Be sure to fill out the `Gamemode` attribute properly, at the very least the `Name`, which refers to the Gamemode's name.  
+First off: Be sure to fill out the implemented properties from `IGamemode` properly, at the very least the `Name`, which refers to the Gamemode's name.  
 GamemodeManager will refer to the Gamemode via that name.  
 Also, please don't use Spaces in that name, use any common type of naming-convention such as snake_case, PascalCase or camelCase.  
 
