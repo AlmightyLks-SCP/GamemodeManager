@@ -27,7 +27,7 @@ autoGamemodeEnd: true
 ## For Developers:
 In order to create gamemodes, please download and reference the `CustomGamemode.dll` within your gamemode's project.  
 Do not refer to Synapse's way of plugin-creation, because GamemodeManager has its own way of determining and loading a gamemode.  
-However, you may refer to Synapse's other functionalities. This includes subscribing events, working with Synapse-Types, etc...  
+However, you may refer to Synapse's other functionalities. This includes subscribing events, working with Synapse's types, etc...  
 <br><br>
 Your Gamemode's class needs to implement the `IGamemode` interface, from the referenced `CustomGamemode.dll`.  
 That's it.  
