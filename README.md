@@ -5,7 +5,7 @@
 ## Installation:
 Download the `CustomGamemode.dll` and place it within your `Synapse\dependencies` folder.  
 Place the `GamemodeManager.dll` in your usual plugins folder.  
-Either your configured path or the default Gamemode folder will provide a place for your plugins to be stored and loaded.  
+Either your configured path or the default Gamemode folder will provide a place for your Gamemodes to be stored and loaded.  
 Done!
 
 ---
@@ -21,6 +21,24 @@ customGamemodePath: ''
 autoGamemodeEnd: true
 }
 ```
+---
+
+## Commands (Remote Admin)
+
+Prefix: `gmm` / `gamemode` / `gamemodemanager`  
+
+- list  
+  List all loaded gamemodes.
+- reload  
+  Reload all Gamemodes from your Gamemode-folder.
+- start [GamemodeName]  
+  Start the Gamemode with the specified name (not case-sensitive).
+- end [GamemodeName]  
+  End a Gamemode.
+- nextround [GamemodeName]  
+  Queue Gamemodes to start next round.
+- clear  
+  Clear the above-mentioned queue.
 
 ---
 
