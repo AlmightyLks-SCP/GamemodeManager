@@ -15,7 +15,6 @@ namespace GamemodeManager.EventHandler
         {
             this.gamemodeLoader = gamemodeLoader;
         }
-
         public void Round_RoundRestartEvent()
         {
             if (GMM.Config.AutoGamemodeEnd)
@@ -28,7 +27,7 @@ namespace GamemodeManager.EventHandler
                 foreach (var gamemode in gamemodeLoader.LoadedGamemodes)
                     ((IGamemode)gamemode).End();
         }
-        public void Round_RoundStartEvent()
+        public void Round_WaitingForPlayersEvent()
         {
             foreach (var modeName in gamemodeLoader.NextRoundGamemodes)
             {

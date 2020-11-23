@@ -17,7 +17,7 @@ namespace GamemodeManager
         SynapseMajor = 2,
         SynapseMinor = 1,
         SynapsePatch = 0,
-        Version = "1.0.0"
+        Version = "1.0.1"
         )]
     public class GMM : AbstractPlugin
     {
@@ -53,10 +53,9 @@ namespace GamemodeManager
 
             SynapseController.Server.Logger.Info($"<{Information.Name}> loaded {GamemodeLoader.LoadedGamemodes.Count} Gamemodes within {watch.Elapsed.TotalMilliseconds} ms!");
 
-            Synapse.Api.Events.EventHandler.Get.Round.RoundStartEvent += _gmmEventHandler.Round_RoundStartEvent;
+            Synapse.Api.Events.EventHandler.Get.Round.WaitingForPlayersEvent += _gmmEventHandler.Round_WaitingForPlayersEvent;
             Synapse.Api.Events.EventHandler.Get.Round.RoundEndEvent += _gmmEventHandler.Round_RoundEndEvent;
             Synapse.Api.Events.EventHandler.Get.Round.RoundRestartEvent += _gmmEventHandler.Round_RoundRestartEvent;
         }
-
     }
 }
