@@ -81,9 +81,9 @@ namespace GamemodeManager
         private void CreateDefaultConfigs(Assembly assembly)
         {
             //Every single Type within Assembly
-            foreach (var type in assembly.GetTypes()) 
+            foreach (var type in assembly.GetTypes())
             {
-                //Every single field within each type
+                //Every single field within each Type
                 foreach (var field in type.GetFields(BindingFlags.Public))
                 {
                     //Only fields with custom attribute
@@ -100,6 +100,7 @@ namespace GamemodeManager
                 }
             }
         }
+        //Ignore as of yet.
         private void LoadConfig(Assembly gamemode)
         {
             if (!File.Exists(Path.Combine(_gamemodeConfigDirectory, "GamemodeConfig.json")))
