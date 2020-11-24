@@ -1,5 +1,6 @@
 ﻿using CustomGamemode;
 using GamemodeManager.Helper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,8 +13,10 @@ namespace GamemodeManager
     {
         internal List<object> LoadedGamemodes { get; set; }
         internal List<string> NextRoundGamemodes { get; set; }
+        internal Dictionary<string, string> GamemodeConfigs { get; set; }
 
         private string _gamemodeDirectory;
+        private string _gamemodeConfigDirectory;
 
         public GamemodeLoader(string gamemodeDirectory)
         {
@@ -73,6 +76,42 @@ namespace GamemodeManager
 
             foreach (var gamemode in LoadedGamemodes)
                 SynapseController.Server.Logger.Info(((IGamemode)gamemode).ToInfoString());
+        }
+
+        private void CreateDefaultConfigs(Assembly assembly)
+        {
+            //Every single Type within Assembly
+            foreach (var type in assembly.GetTypes()) 
+            {
+                //Every single field within each type
+                foreach (var field in type.GetFields(BindingFlags.Public))
+                {
+                    //Only fields with custom attribute
+                    var cfgAttr = field.GetCustomAttribute<GamemodeConfig>();
+                    if (cfgAttr is null)
+                        continue;
+
+                    //Don't question why it's not 'field.FieldType', supposedly Unity likes to call things MonoField then.
+                    //The field's type
+                    Type cfgType = FieldInfo.GetFieldFromHandle(field.FieldHandle).FieldType;
+
+                    //The field's value
+                    object typeObj = Activator.CreateInstance(cfgType);
+                }
+            }
+        }
+        private void LoadConfig(Assembly gamemode)
+        {
+            if (!File.Exists(Path.Combine(_gamemodeConfigDirectory, "GamemodeConfig.json")))
+                File.WriteAllText(Path.Combine(_gamemodeConfigDirectory, "GamemodeConfig.json"), JsonConvert.SerializeObject(GamemodeConfigs));
+            Dictionary<string, string> jsonConfig = new Dictionary<string, string>();
+
+            string cfgFile = File.ReadAllText(Path.Combine(_gamemodeConfigDirectory, "GamemodeConfig.json"));
+            jsonConfig = JsonConvert.DeserializeObject<Dictionary<string, string>>(cfgFile);
+
+            SynapseController.Server.Logger.Info(File.ReadAllText(Path.Combine(_gamemodeConfigDirectory, "GamemodeConfig.json")));
+            SynapseController.Server.Logger.Info("------------------");
+            SynapseController.Server.Logger.Info(JsonConvert.SerializeObject(jsonConfig));
         }
     }
 }
