@@ -2,5 +2,5 @@
 
 namespace CustomGamemode
 {
-    public sealed class GamemodeConfig : Attribute { }
+    public class GamemodeConfig : Attribute { }
 }

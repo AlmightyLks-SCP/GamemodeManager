@@ -36,7 +36,7 @@ namespace GamemodeManager
                 gamemodePath = Config.CustomGamemodePath;
 
 
-            GamemodeLoader = new GamemodeLoader(gamemodePath);
+            GamemodeLoader = new GamemodeLoader(gamemodePath, PluginDirectory);
 
             _gmmEventHandler = new GMMEventHandler(GamemodeLoader);
 

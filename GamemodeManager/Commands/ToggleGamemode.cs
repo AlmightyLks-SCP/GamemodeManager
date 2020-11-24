@@ -38,7 +38,7 @@ namespace GamemodeManager.Commands
                             if (GMM.GamemodeLoader.LoadedGamemodes.Count != 0)
                             {
                                 result.State = CommandResultState.Ok;
-                                result.Message = String.Join(", ", GMM.GamemodeLoader.LoadedGamemodes.Select((_) => ((IGamemode)_).Name));
+                                result.Message = String.Join(", ", GMM.GamemodeLoader.LoadedGamemodes.Select((_) => ((IGamemode)_.Gamemode).Name));
                             }
                             else
                             {
@@ -74,7 +74,7 @@ namespace GamemodeManager.Commands
                         }
                     case "start" when args.Length == 2:
                         {
-                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => ((IGamemode)_).Name.ToLower() == args[1].ToLower());
+                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => ((IGamemode)_.Gamemode).Name.ToLower() == args[1].ToLower());
 
                             if (gamemode == default(IGamemode))
                             {
@@ -92,7 +92,7 @@ namespace GamemodeManager.Commands
                         }
                     case "nextround" when args.Length == 2:
                         {
-                            var gamemodeExists = GMM.GamemodeLoader.LoadedGamemodes.Any((_) => ((IGamemode)_).Name.ToLower() == args[1].ToLower());
+                            var gamemodeExists = GMM.GamemodeLoader.LoadedGamemodes.Any((_) => ((IGamemode)_.Gamemode).Name.ToLower() == args[1].ToLower());
 
                             if (!gamemodeExists)
                             {
@@ -110,7 +110,7 @@ namespace GamemodeManager.Commands
                         }
                     case "end" when args.Length == 2:
                         {
-                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => ((IGamemode)_).Name.ToLower() == args[1].ToLower());
+                            gamemode = GMM.GamemodeLoader.LoadedGamemodes.FirstOrDefault((_) => ((IGamemode)_.Gamemode).Name.ToLower() == args[1].ToLower());
 
                             if (gamemode == default(IGamemode))
                             {
